@@ -186,12 +186,15 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), result)
 
-	if ok := verificacampo(reperibile); ok == true {
-		fmt.Println("reperibile è un cell: ", reperibile)
+	//Trasforma il campo passato in una stringa di 10 numeri
+	cell10cifre := string(reperibile[len(reperibile)-10:])
+
+	if ok := verificaCell(cell10cifre); ok == true {
+		fmt.Println("reperibile è un cell: ", cell10cifre)
 	}
 
 	scheletro :=
-		`Channel: SIP/999` + reperibile + `@10.31.18.26
+		`Channel: SIP/999` + cell10cifre + `@10.31.18.26
 MaxRetries: 5 
 RetryTime: 300 
 WaitTime: 60 
@@ -229,8 +232,9 @@ func CreateCall(notifica string) {
 	fmt.Printf("\nFile Name: %s", file.Name())
 }
 
-func verificacampo(value string) (ok bool) {
-	test := regexp.MustCompile(`^.*[0-9]{10}$`)
+//verificaCell verifica che il cell sia una stringa di 10 cifre
+func verificaCell(value string) (ok bool) {
+	test := regexp.MustCompile(`^[0-9]{10}$`)
 	return test.MatchString(value)
 
 }
