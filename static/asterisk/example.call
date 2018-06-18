@@ -5,7 +5,7 @@ WaitTime: 60
 Context: nagios-notify 
 Extension: s 
 Archive: Yes 
-Set: CONTACT_NAME="Alberto Bregliano" 
+Set: CONTACT_NAME="Gringo" 
 Set: PLAT_NAME="In Touch HD" 
 Set: NOT_TYPE="PROBLEM" 
 Set: HOST_ALIAS="se-mi1-20" 

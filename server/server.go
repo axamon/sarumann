@@ -26,8 +26,10 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"regexp"
 	"time"
 
@@ -185,7 +187,43 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 	if ok := verificacampo(reperibile); ok == true {
 		fmt.Println("reperibile è un cell: ", reperibile)
 	}
+
+	scheletro :=
+		`Channel: SIP/999` + cellulare + `@10.31.18.26
+	MaxRetries: 5 
+	RetryTime: 300 
+	WaitTime: 60 
+	Context: nagios-notify 
+	Extension: s 
+	Archive: Yes 
+	Set: CONTACT_NAME="Gringo" 
+	Set: PLAT_NAME="In Touch HD" 
+	Set: NOT_TYPE="PROBLEM" 
+	Set: HOST_ALIAS="` + hostname + `" 
+	Set: SERVICE_NAME="` + service + `" 
+	Set: STATUS="Critico" 
+	Set: NOT_HEAD_MSG="Sulla piattaforma ` + piattaforma + ` è stato riscontrato un problema" 
+	Set: SRV_MSG="il server ` + hostname + ` è in critical a causa di ` + service + `"`
+
+	CreateCall(scheletro)
+
 	return
+}
+
+//CreateCall crea il file .call che serve ad Asterisk
+func CreateCall(notifica string) {
+	file, err := os.Create("/test/ejemplo.call") // Truncates if file already exists, be careful!
+	if err != nil {
+		log.Fatalf("failed creating file: %s", err)
+	}
+	defer file.Close() // Make sure to close the file when you're done
+
+	len, err := file.WriteString(notifica)
+	if err != nil {
+		log.Fatalf("failed writing to file: %s", err)
+	}
+	fmt.Printf("\nLength: %d bytes", len)
+	fmt.Printf("\nFile Name: %s", file.Name())
 }
 
 func verificacampo(value string) (ok bool) {
