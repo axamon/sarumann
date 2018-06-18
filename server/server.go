@@ -191,21 +191,21 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 	}
 
 	scheletro :=
-		`Channel: SIP/999` + cellulare + `@10.31.18.26
-	MaxRetries: 5 
-	RetryTime: 300 
-	WaitTime: 60 
-	Context: nagios-notify 
-	Extension: s 
-	Archive: Yes 
-	Set: CONTACT_NAME="Gringo" 
-	Set: PLAT_NAME="In Touch HD" 
-	Set: NOT_TYPE="PROBLEM" 
-	Set: HOST_ALIAS="` + hostname + `" 
-	Set: SERVICE_NAME="` + service + `" 
-	Set: STATUS="Critico" 
-	Set: NOT_HEAD_MSG="Sulla piattaforma ` + piattaforma + ` è stato riscontrato un problema" 
-	Set: SRV_MSG="il server ` + hostname + ` è in critical a causa di ` + service + `"`
+		`Channel: SIP/999` + reperibile + `@10.31.18.26
+MaxRetries: 5 
+RetryTime: 300 
+WaitTime: 60 
+Context: nagios-notify 
+Extension: s 
+Archive: Yes 
+Set: CONTACT_NAME="Gringo" 
+Set: PLAT_NAME="` + piattaforma + `" 
+Set: NOT_TYPE="PROBLEM" 
+Set: HOST_ALIAS="` + hostname + `" 
+Set: SERVICE_NAME="` + service + `" 
+Set: STATUS="Critico" 
+Set: NOT_HEAD_MSG="è stato riscontrato un problema" 
+Set: SRV_MSG="il server ` + hostname + ` è in critical a causa di ` + service + `"`
 
 	CreateCall(scheletro)
 
