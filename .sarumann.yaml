@@ -4,3 +4,4 @@ Version: v1.1.0-beta
 Server: "sauron1.westeurope.cloudapp.azure.com"
 Cellpertest: "+393357291533"
 NumServiceDesk: "+39555555555"
+CallPath: "/usr/share/nginx/html/"

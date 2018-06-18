@@ -33,6 +33,8 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/spf13/viper"
+
 	"github.com/axamon/sauron2/reperibili"
 	"github.com/gorilla/mux"
 )
@@ -212,7 +214,8 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 
 //CreateCall crea il file .call che serve ad Asterisk
 func CreateCall(notifica string) {
-	file, err := os.Create("/tmp/ejemplo.call") // Truncates if file already exists, be careful!
+	path := viper.GetString("CallPath")
+	file, err := os.Create(path + "example.call") // Truncates if file already exists, be careful!
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
 	}
