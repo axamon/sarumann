@@ -215,7 +215,7 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 //CreateCall crea il file .call che serve ad Asterisk
 func CreateCall(notifica string) {
 	path := viper.GetString("CallPath")
-	file, err := os.Create(path + "example.call") // Truncates if file already exists, be careful!
+	file, err := os.Create(path + "exampleTest.call") // Truncates if file already exists, be careful!
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
 	}
