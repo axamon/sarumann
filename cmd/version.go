@@ -1,4 +1,4 @@
-// Copyright © 2018 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2018 Alberto Bregliano <alberto.bregliano@pm.me>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ var versionCmd = &cobra.Command{
 	Short: "Sarumann's version",
 	Long:  `it will print the actual version of the softaware`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Version v1.1.0-beta")
+		fmt.Println("Version v1.2.4-beta")
 	},
 }
 

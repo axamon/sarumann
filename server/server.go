@@ -39,7 +39,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//Notifica sono le info che si ricevono dai nagios
+//Notifica sono le info che si ricevono dai nagios che vengono
+//elaborate per creare le chiamate automatiche
 type Notifica struct {
 	//Time        time.Time `json:"timestamp,omitempty"`
 	Hostname    string `json:"hostname,omitempty"`
@@ -50,29 +51,14 @@ type Notifica struct {
 	Messaggio   string `json:"messaggio,omitempty"`
 }
 
-//Dettagli non usato al momento
+//Dettagli non usato al momento ma servirà a gestire le
+//risposte del centralino virtuale asterisk
 type Dettagli struct {
 	Info  string `json:"info,omitempty"`
 	State string `json:"state,omitempty"`
 }
 
 var people []Notifica
-
-//CreatePersonEndpoint non usata al momento
-func CreatePersonEndpoint(w http.ResponseWriter, req *http.Request) {
-	params := mux.Vars(req)
-	fmt.Println(params)
-	var errore Notifica
-	err := json.NewDecoder(req.Body).Decode(&errore)
-	if err != nil {
-		fmt.Println(err)
-	}
-	errore.Hostname = params["hostname"]
-	errore.Service = params["servizio"]
-	errore.Messaggio = params["messaggio"]
-	json.NewEncoder(w).Encode(errore)
-	fmt.Println(errore)
-}
 
 func respondWithError(w http.ResponseWriter, code int, message string) {
 	respondWithJSON(w, code, map[string]string{"error": message})
@@ -87,6 +73,7 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 //GetReper recupera il reperibile attuale per la piattaforma
+//passata come argomento
 func GetReper(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-cache, private, max-age=0")
 	w.Header().Set("Expires", time.Unix(0, 0).Format(http.TimeFormat))
@@ -108,7 +95,7 @@ func GetReper(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-//SetReper inserisce reperibilità
+//SetReper inserisce reperibilità in un archivio condiviso
 func SetReper(w http.ResponseWriter, r *http.Request) {
 	/* var p reperibili.Contatto
 	decoder := json.NewDecoder(r.Body)
@@ -149,7 +136,8 @@ func SetReper(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-//CreateNotifica riceve gli alerts
+//CreateNotifica riceve gli alerts dei nagios e li utilizza per
+//allertare telefonicamente il reperibile in turno
 func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 
 	//Crea p come tipo Notifica con i suoi structs
@@ -215,8 +203,13 @@ Set: SRV_MSG="il server ` + hostname + ` è in critical a causa di ` + service +
 	return
 }
 
-//CreateCall crea il file .call che serve ad Asterisk
+//CreateCall crea il file .call che serve ad Asterisk per contattare il reperibile
 func CreateCall(notifica string) {
+
+	//dove salavare i file in maniera che asterisk li possa scaricare
+	//nel nostro caso equivale a dove nginx tiene i contenuti statici del webserver
+	//le informazioni sono nel file nascosto .sarumann.yaml che l'utente deve avere
+	//nella propria $HOME
 	path := viper.GetString("CallPath")
 	file, err := os.Create(path + "exampleTest.call") // Truncates if file already exists, be careful!
 	if err != nil {

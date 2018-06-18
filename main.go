@@ -20,8 +20,12 @@
 
 package main
 
-import "github.com/axamon/sarumann/cmd"
+import (
+	"github.com/axamon/sarumann/cmd"
+)
 
 func main() {
+
 	cmd.Execute()
+
 }
