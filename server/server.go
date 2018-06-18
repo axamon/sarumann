@@ -28,6 +28,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
 	"time"
 
 	"github.com/axamon/sauron2/reperibili"
@@ -181,5 +182,14 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), result)
 
+	if ok := verificacampo(reperibile); ok == true {
+		fmt.Println("reperibile è un cell: ", reperibile)
+	}
 	return
+}
+
+func verificacampo(value string) (ok bool) {
+	test := regexp.MustCompile(`^.*[0-9]{10}$`)
+	return test.MatchString(value)
+
 }

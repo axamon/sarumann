@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Cache-control" content="no-cache">
+    <title>Setta reperibilità</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+            <script>
+                    function showHint(str) {
+                        if (str.length == 0) { 
+                            document.getElementById("div1").innerHTML = "";
+                            return;
+                        } else {
+                            var xmlhttp = new XMLHttpRequest();
+                            xmlhttp.onreadystatechange = function() {
+                                if (this.readyState == 4 && this.status < 399) {
+                                    document.getElementById("div1").innerHTML = this.responseText;
+                                }
+                            }
+                            xmlhttp.open("GET", "http://104.40.155.230/getreper/"+str, true);
+                            xmlhttp.send();
+                        }
+                    }
+                    </script>
+    <script>
+            function checkcell() {
+                var x, text;
+            
+                // Get the value of the input field with id="numb"
+                x = document.getElementById("cellulare").value;
+            
+                // If x is Not a Number or less than one or greater than 10
+                if (/^\+39([0-9]{10})$/.test(x)) {
+                    text = "Cell OK";
+                } else {
+                    text = "Il formato cellulare deve essere del tipo +39(10 cifre)";
+                }
+                document.getElementById("ok").innerHTML = text;
+            }
+            </script>
+</head>
+<body>
+    <style>
+                .hide { position:absolute; top:-1px; left:-1px; width:1px; height:1px; }
+    </style>
+              
+    <iframe name="hiddenFrame" class="hide"></iframe>
+              
+            
+    <form  target="hiddenFrame" action="http://104.40.155.230/reper" method="post">
+    <fieldset>
+        Nome:<br>
+        <input type="text" name="nome"><br>
+        Cognome:<br>
+        <input type="text" name="cognome"><br>
+        Cellulare:<br>
+        <input type="text" id="cellulare" name="cellulare" oninput="checkcell()"><br><br>
+        <select id="piattaforma" name="piattaforma" onclick="showHint(this.value)">
+                <option value="CDN">CDN</option>
+                <option value="AVS">AVS</option>
+                <option value="BOB">BOB</option>
+                <option value="APS">APS</option>
+              </select>
+              <p id="ok"></p>
+        <input onclick="window.location.href = 'http://104.40.155.230/index2.html';" type="submit" value="Invia">
+    </fieldset>
+      </form>
+      <div id="div1"><h2>Rerpibile attuale</h2></div>
+
+<button>Mostra reperibile attuale</button>
+</body>
+</html>
