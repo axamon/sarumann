@@ -212,7 +212,7 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 
 //CreateCall crea il file .call che serve ad Asterisk
 func CreateCall(notifica string) {
-	file, err := os.Create("/test/ejemplo.call") // Truncates if file already exists, be careful!
+	file, err := os.Create("/tmp/ejemplo.call") // Truncates if file already exists, be careful!
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
 	}
