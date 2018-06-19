@@ -178,6 +178,14 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 	//Non deve inviare la VoiceCall
 	//CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
 
+	//Ma un controllo se il cellulare è corretto si può fare
+
+	//Trasforma il campo passato in una stringa di 10 numeri
+	_, err = verificaCell(reperibile)
+	if err != nil {
+		log.Printf("Cellulare non gestibile: %s\n", err.Error())
+		return
+	}
 	return
 }
 
