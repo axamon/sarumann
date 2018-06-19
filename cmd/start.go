@@ -24,6 +24,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var voicecall bool
+
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
@@ -37,8 +39,12 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		//port := flag.String("port", "8080", "porta TCP da usare.")
 		router := mux.NewRouter()
-		router.HandleFunc("/people", server.CreatePersonEndpoint).Methods("POST")
-		router.HandleFunc("/create", server.CreateNotifica).Methods("POST")
+		switch {
+		case voicecall == false:
+			router.HandleFunc("/create", server.CreateNotificaNoVoice).Methods("POST")
+		case voicecall == true:
+			router.HandleFunc("/create", server.CreateNotifica).Methods("POST")
+		}
 		router.HandleFunc("/reper", server.SetReper).Methods("POST")
 		router.HandleFunc("/getreper/{piatta}", server.GetReper)
 		port := cmd.Flag("port").Value.String()
@@ -60,5 +66,6 @@ func init() {
 	// is called directly, e.g.:
 	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	startCmd.Flags().String("port", "8080", "TCP port to use")
+	startCmd.Flags().BoolVarP(&voicecall, "voicecall", "v", true, "Attivazione chiamate vocali")
 
 }
