@@ -233,7 +233,7 @@ func verificaCell(value string) (cell string, err error) {
 
 	//se value ha meno di 10 cifre non è buono
 	if len(value) < 10 {
-		log.Fatalf("Cellulare con poche cifre: %v", len(value))
+		log.Printf("Cellulare con poche cifre: %v\n", len(value))
 		return
 	}
 	//cell10cifre prende gli ultimi 10 caratteri del value
