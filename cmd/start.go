@@ -38,12 +38,15 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+
 		//port := flag.String("port", "8080", "porta TCP da usare.")
 		router := mux.NewRouter()
 		switch {
 		case voicecall == true:
+			fmt.Println("Notifiche vocali attive!")
 			router.HandleFunc("/create", server.CreateNotifica).Methods("POST")
 		default:
+			fmt.Println("Notifiche vocali disattivate.")
 			router.HandleFunc("/create", server.CreateNotificaNoVoiceCall).Methods("POST")
 		}
 
