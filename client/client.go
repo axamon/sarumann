@@ -25,7 +25,9 @@ package client
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 )
@@ -62,6 +64,10 @@ func SendPost(endpoint, hostname, service, piatta, rep, cell, msg string) (err e
 
 	//invia a endpoint b con le informazioni di p encodade in json via POST
 	res, err := http.Post(endpoint, "application/json; charset=utf-8", b)
+	if err != nil {
+		err = fmt.Errorf("Problema creazione post %s", err.Error())
+		log.Fatal(err.Error())
+	}
 
 	//serve per vedere il body della response
 	io.Copy(os.Stdout, res.Body)

@@ -165,24 +165,34 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
+		log.Fatal(err.Error())
 		return
 	}
 
 	result := fmt.Sprintf("Ok. campi ricevuti: Hostname: %s, Service: %s, Piattaforma: %s, Reperibile: %s, Cellulare: %s, Messaggio: %s", hostname, service, piattaforma, reperibile, cellulare, messaggio)
 
 	respondWithJSON(w, http.StatusCreated, result)
+	log.Println("ok")
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), result)
 
-	//Trasforma il campo passato in una stringa di 10 numeri
-	cell10cifre := string(reperibile[len(reperibile)-10:])
+	go CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
 
-	if ok := verificaCell(cell10cifre); ok == true {
-		fmt.Println("reperibile è un cell: ", cell10cifre)
+	return
+}
+
+//CreateCall crea il file .call che serve ad Asterisk per contattare il reperibile
+func CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio string) (err error) {
+
+	//Trasforma il campo passato in una stringa di 10 numeri
+
+	cell, err := verificaCell(reperibile)
+	if err != nil {
+		return
 	}
 
 	scheletro :=
-		`Channel: SIP/999` + cell10cifre + `@10.31.18.26
+		`Channel: SIP/999` + cell + `@10.31.18.26
 MaxRetries: 5 
 RetryTime: 300 
 WaitTime: 60 
@@ -196,15 +206,7 @@ Set: HOST_ALIAS="` + hostname + `"
 Set: SERVICE_NAME="` + service + `" 
 Set: STATUS="Critico" 
 Set: NOT_HEAD_MSG="è stato riscontrato un problema" 
-Set: SRV_MSG="il server ` + hostname + ` è in critical a causa di ` + service + `"`
-
-	CreateCall(scheletro)
-
-	return
-}
-
-//CreateCall crea il file .call che serve ad Asterisk per contattare il reperibile
-func CreateCall(notifica string) {
+Set: SRV_MSG="sul server ` + hostname + ` il servizio ` + service + ` è in critical` + messaggio + `"`
 
 	//dove salavare i file in maniera che asterisk li possa scaricare
 	//nel nostro caso equivale a dove nginx tiene i contenuti statici del webserver
@@ -217,17 +219,31 @@ func CreateCall(notifica string) {
 	}
 	defer file.Close() // Make sure to close the file when you're done
 
-	//len, err := file.WriteString(notifica)
+	_, err = file.WriteString(scheletro)
 	if err != nil {
 		log.Fatalf("failed writing to file: %s", err)
 	}
 	//fmt.Printf("\nLength: %d bytes", len)
 	fmt.Printf("\nFile Name: %s\n", file.Name())
+	return
 }
 
 //verificaCell verifica che il cell sia una stringa di 10 cifre
-func verificaCell(value string) (ok bool) {
+func verificaCell(value string) (cell string, err error) {
+	//cell10cifre prende gli ultimi 10 caratteri del value
+	//passato alla funzione
+	cell10cifre := string(value[len(value)-10:])
+
+	//test verifica che il valore sia composto da esattamente 10 cifre
 	test := regexp.MustCompile(`^[0-9]{10}$`)
-	return test.MatchString(value)
+	switch {
+	case test.MatchString(cell10cifre) == true:
+		cell = cell10cifre
+	default:
+		cell = ""
+		err = fmt.Errorf("Il cellulare non è corretto")
+	}
+
+	return
 
 }
