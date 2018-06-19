@@ -176,7 +176,7 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), result)
 
-	go CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
+	CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
 
 	return
 }
@@ -188,7 +188,7 @@ func CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio
 
 	cell, err := verificaCell(reperibile)
 	if err != nil {
-		return
+		log.Fatalf("Cellulare non gestibile: %s", err.Error())
 	}
 
 	scheletro :=
@@ -230,8 +230,13 @@ Set: SRV_MSG="sul server ` + hostname + ` il servizio ` + service + ` è in crit
 
 //verificaCell verifica che il cell sia una stringa di 10 cifre
 func verificaCell(value string) (cell string, err error) {
+
+	//se value ha meno di 10 cifre non è buono
+	if len(value) < 10 {
+		log.Fatalf("Cellulare con poche cifre: %v", len(value))
+		return
+	}
 	//cell10cifre prende gli ultimi 10 caratteri del value
-	//passato alla funzione
 	cell10cifre := string(value[len(value)-10:])
 
 	//test verifica che il valore sia composto da esattamente 10 cifre
