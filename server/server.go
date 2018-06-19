@@ -136,46 +136,6 @@ func SetReper(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-//CreateNotificaNoVoice riceve gli alerts dei nagios
-func CreateNotificaNoVoice(w http.ResponseWriter, r *http.Request) {
-
-	//Crea p come tipo Notifica con i suoi structs
-	var p Notifica
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&p); err != nil {
-		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
-		return
-	}
-	defer r.Body.Close()
-
-	//fmt.Println(p) //debug
-
-	hostname, err := url.QueryUnescape(p.Hostname)
-
-	service, err := url.QueryUnescape(p.Service)
-
-	piattaforma, err := url.QueryUnescape(p.Piattaforma)
-
-	reperibile, err := url.QueryUnescape(p.Reperibile)
-
-	cellulare, err := url.QueryUnescape(p.Cellulare)
-
-	messaggio, err := url.QueryUnescape(p.Messaggio)
-
-	if err != nil {
-		respondWithError(w, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	result := fmt.Sprintf("Ok. campi ricevuti: Hostname: %s, Service: %s, Piattaforma: %s, Reperibile: %s, Cellulare: %s, Messaggio: %s", hostname, service, piattaforma, reperibile, cellulare, messaggio)
-
-	respondWithJSON(w, http.StatusCreated, result)
-
-	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), result)
-
-	return
-}
-
 //CreateNotifica riceve gli alerts dei nagios e li utilizza per
 //allertare telefonicamente il reperibile in turno
 func CreateNotifica(w http.ResponseWriter, r *http.Request) {
