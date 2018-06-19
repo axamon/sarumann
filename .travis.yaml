@@ -1,7 +1,16 @@
 language: go
 
-# Only the last two Go releases are supported by the Go team with security
-# updates. Any older versions be considered deprecated. Don't bother testing
-# with them.
 go:
-  - 1.9.x
+  - 1.10.x
+  - tip
+
+before_install:
+  - go get -t -v ./...
+
+script:
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
+  - ./gotests.sh
+  
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
