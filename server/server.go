@@ -249,6 +249,8 @@ func verificaCell(value string) (cell string, err error) {
 	default:
 		cell = ""
 		err = fmt.Errorf("Il cellulare non è corretto")
+		log.Println(err.Error())
+		return "", err
 	}
 
 	return
