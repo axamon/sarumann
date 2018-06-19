@@ -18,6 +18,7 @@ func TestVerificaCell(t *testing.T) {
 		{num: "3342331230", Valido: true},
 		{num: "+393342331230", Valido: true},
 		{num: "+39 335 2331230", Valido: false},
+		{num: "+39abcDefghilm", Valido: true},
 	}
 
 	for _, cell := range Numeri {
