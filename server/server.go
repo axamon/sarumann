@@ -206,7 +206,7 @@ Set: HOST_ALIAS="` + hostname + `"
 Set: SERVICE_NAME="` + service + `" 
 Set: STATUS="Critico" 
 Set: NOT_HEAD_MSG="è stato riscontrato un problema" 
-Set: SRV_MSG="sul server ` + hostname + ` il servizio ` + service + ` è in critical` + messaggio + `"`
+Set: SRV_MSG="sul server ` + hostname + ` il servizio ` + service + ` è in critical ` + messaggio + `"`
 
 	//dove salavare i file in maniera che asterisk li possa scaricare
 	//nel nostro caso equivale a dove nginx tiene i contenuti statici del webserver
