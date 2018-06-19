@@ -24,6 +24,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//voicecall gestisce l'invio o meno delle notifiche telefoniche
+var voicecall bool
+
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
@@ -35,9 +38,18 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+
 		//port := flag.String("port", "8080", "porta TCP da usare.")
 		router := mux.NewRouter()
-		router.HandleFunc("/create", server.CreateNotifica).Methods("POST")
+		switch {
+		case voicecall == true:
+			fmt.Println("Notifiche vocali attive!")
+			router.HandleFunc("/create", server.CreateNotifica).Methods("POST")
+		default:
+			fmt.Println("Notifiche vocali disattivate.")
+			router.HandleFunc("/create", server.CreateNotificaNoVoiceCall).Methods("POST")
+		}
+
 		router.HandleFunc("/reper", server.SetReper).Methods("POST")
 		router.HandleFunc("/getreper/{piatta}", server.GetReper)
 		port := cmd.Flag("port").Value.String()
@@ -59,5 +71,6 @@ func init() {
 	// is called directly, e.g.:
 	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	startCmd.Flags().String("port", "8080", "TCP port to use")
+	startCmd.Flags().BoolVarP(&voicecall, "voicecall", "v", true, "Attivazione chiamate vocali")
 
 }
