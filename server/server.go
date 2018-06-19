@@ -19,7 +19,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package server provides the ability to forward Nagios Notifications
+//Package server provides the ability to forward Nagios Notifications
 //to an Asterisk phone sytem.
 package server
 
