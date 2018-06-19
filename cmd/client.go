@@ -28,18 +28,13 @@ import (
 // clientCmd represents the client command
 var clientCmd = &cobra.Command{
 	Use:   "client",
-	Short: "Sends data to server",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "cliemt sends data to sarumann server",
+	Long:  `sarumann client hostname servizio piattaforma cellreperibile cellulare2(non usato) messaggio`,
 	Run: func(cmd *cobra.Command, args []string) {
 		endpoint := "http://" + viper.GetString("Server") + "/create"
 		fmt.Println(endpoint)
 		if len(args) != 6 {
-			log.Panic("numero di parametri errato")
+			log.Println("numero di parametri errato")
 			os.Exit(1)
 		}
 		err := client.SendPost(endpoint, args[0], args[1], args[2], args[3], args[4], args[5])
