@@ -188,7 +188,8 @@ func CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio
 
 	cell, err := verificaCell(reperibile)
 	if err != nil {
-		log.Fatalf("Cellulare non gestibile: %s", err.Error())
+		log.Printf("Cellulare non gestibile: %s\n", err.Error())
+		return
 	}
 
 	scheletro :=
