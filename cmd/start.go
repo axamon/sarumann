@@ -24,8 +24,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Voicecall bool
-
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
@@ -61,6 +59,5 @@ func init() {
 	// is called directly, e.g.:
 	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	startCmd.Flags().String("port", "8080", "TCP port to use")
-	startCmd.Flags().BoolVarP(&Voicecall, "voicecall", "v", true, "Attivazione chiamate vocali")
 
 }

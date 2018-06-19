@@ -185,7 +185,6 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 func CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio string) (err error) {
 
 	//Trasforma il campo passato in una stringa di 10 numeri
-
 	cell, err := verificaCell(reperibile)
 	if err != nil {
 		log.Printf("Cellulare non gestibile: %s\n", err.Error())
