@@ -175,7 +175,8 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), result)
 
-	CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
+	//Non deve inviare la VoiceCall
+	//CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
 
 	return
 }
