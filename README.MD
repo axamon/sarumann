@@ -4,5 +4,5 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/axamon/sarumann)](https://goreportcard.com/report/github.com/axamon/sarumann)
 
-Softbox Autonomous Router Updates Messages and Automatic Nagios Notifications
+Softbox Autonomous Router for Updates, Messages and Automatic Nagios Notifications
 
