@@ -8,13 +8,13 @@ before_install:
   - go get -t -v ./...
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/mattn/goveralls
+  
 
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic
   - ./gotests.sh
   - go test -v -covermode=count -coverprofile=coverage.out
-  - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
-  
+  - $GOPATH/bin/goveralls -service=travis-ci  
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
