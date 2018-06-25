@@ -29,7 +29,9 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
+	"regexp"
 )
 
 //Notifica sono le info che si ricevono dai nagios
@@ -41,6 +43,37 @@ type Notifica struct {
 	Reperibile  string `json:"reperibile,omitempty"`
 	Cellulare   string `json:"cellulare,omitempty"`
 	Messaggio   string `json:"messaggio,omitempty"`
+}
+
+func verificaCell(value string) (err error) {
+	test := regexp.MustCompile(`^.*[0-9]{10}$`)
+	switch {
+	case test.MatchString(value) == true:
+		err = nil
+	default:
+		errore := fmt.Sprintf("Il cellulare non è corretto, %s", value)
+		err = fmt.Errorf(errore)
+		//log.Fatal(err.Error())
+	}
+	return
+}
+
+func verificaMsg(value string) (err error) {
+	switch {
+	case len(value) < 50:
+		err = nil
+	default:
+		err = fmt.Errorf("Messaggio eccede 50 caratteri")
+		//log.Fatal(err.Error())
+	}
+	return
+}
+
+func verificaEndpoint(value string) (err error) {
+
+	_, err = url.ParseRequestURI(value)
+
+	return
 }
 
 //SendPost invia via POST le variabili ricevute
@@ -56,11 +89,15 @@ func SendPost(endpoint, hostname, service, piatta, rep, cell, msg string) (err e
 		Messaggio:   msg,
 	}
 
+	err = verificaCell(p.Cellulare)
+
+	err = verificaMsg(p.Messaggio)
+
 	//Crea un nuovo buffer
 	b := new(bytes.Buffer)
 
 	//Encoda p in b
-	json.NewEncoder(b).Encode(p)
+	err = json.NewEncoder(b).Encode(p)
 
 	//invia a endpoint b con le informazioni di p encodade in json via POST
 	res, err := http.Post(endpoint, "application/json; charset=utf-8", b)
