@@ -10,6 +10,11 @@ func TestFields(t *testing.T) {
 
 	Convey("Given a notification", t, func() {
 
+		Convey("The endpont must be a valid URL", func() {
+			So(verificaEndpoint("http/127.0.0.1:8080/create"), ShouldNotBeNil)
+			So(verificaEndpoint("http://127.0.0.1:8080/crate"), ShouldBeNil)
+		})
+
 		Convey("The cell must be at least 10 digits", func() {
 			So(verificaCell("12345678"), ShouldNotBeNil)
 			So(verificaCell("1234567890"), ShouldBeNil)

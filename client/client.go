@@ -93,6 +93,8 @@ func SendPost(endpoint, hostname, service, piatta, rep, cell, msg string) (err e
 
 	err = verificaMsg(p.Messaggio)
 
+	err = verificaEndpoint(endpoint)
+
 	//Crea un nuovo buffer
 	b := new(bytes.Buffer)
 
