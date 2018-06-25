@@ -1,6 +1,10 @@
 package server
 
-import "testing"
+import (
+	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
+)
 
 type contatto struct {
 	num    string
@@ -12,32 +16,20 @@ var Numeri []contatto
 var okcell bool
 
 func TestVerificaCell(t *testing.T) {
+	Convey("Given a cellphone", t, func() {
 
-	Numeri := []contatto{
-		{num: "334233123", Valido: false},
-		{num: "3342331230", Valido: true},
-		{num: "+393342331230", Valido: true},
-		{num: "+39 335 2331230", Valido: false},
-		{num: "+39abcDefghilm", Valido: true},
-	}
+		Convey("The cell number must be at least 10 digits", func() {
+			_, err := verificaCell("12345678")
+			So(err, ShouldNotBeNil)
+			_, err = verificaCell("1234567890")
+			So(err, ShouldBeNil)
+			cell, err := verificaCell("+391234567890")
+			So(cell, ShouldEqual, "1234567890")
+			So(err, ShouldBeNil)
+			_, err = verificaCell("+391234567890a")
+			So(err, ShouldNotBeNil)
 
-	for _, cell := range Numeri {
+		})
+	})
 
-		cellulare, err := verificaCell(cell.num)
-		switch {
-		case len(cellulare) == 10:
-			okcell = true
-		case err != nil:
-			t.Skip()
-		default:
-			//Se restituisce un numero diverso da 10 è sbagliato
-			okcell = false
-		}
-
-		if okcell != cell.Valido {
-			t.Fatal()
-
-		}
-
-	}
 }
