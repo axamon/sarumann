@@ -34,6 +34,12 @@ import (
 	"regexp"
 )
 
+const (
+	//Credenziali impostate su NGINX del server
+	username = "sarumann"
+	password = "pippo"
+)
+
 //Notifica sono le info che si ricevono dai nagios
 type Notifica struct {
 	//Time        time.Time `json:"timestamp,omitempty"`
@@ -98,18 +104,25 @@ func SendPost(endpoint, hostname, service, piatta, rep, cell, msg string) (err e
 	//Crea un nuovo buffer
 	b := new(bytes.Buffer)
 
-	//Encoda p in b
+	//Encoda la notifica p nel buffer b
 	err = json.NewEncoder(b).Encode(p)
 
-	//invia a endpoint b con le informazioni di p encodade in json via POST
-	res, err := http.Post(endpoint, "application/json; charset=utf-8", b)
-	if err != nil {
-		err = fmt.Errorf("Problema creazione post %s", err.Error())
-		log.Fatal(err.Error())
-	}
+	//Prepara il client http
+	client := &http.Client{}
 
-	//serve per vedere il body della response
-	io.Copy(os.Stdout, res.Body)
+	//Imposta la request
+	req, err := http.NewRequest("POST", endpoint, b)
+
+	//Aggiunge username e password impostate sul server web di arrivo
+	req.SetBasicAuth(username, password)
+
+	//Avvia il client e riceve la response
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//bodyText, err := ioutil.ReadAll(resp.Body)
+	io.Copy(os.Stdout, resp.Body)
 
 	return
 }

@@ -41,7 +41,7 @@ var clientCmd = &cobra.Command{
 		if err != nil {
 			log.Panic(err.Error())
 		}
-		fmt.Println("client called")
+		//fmt.Println("client called")
 	},
 }
 

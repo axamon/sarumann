@@ -26,7 +26,7 @@ var versionCmd = &cobra.Command{
 	Short: "Sarumann's version",
 	Long:  `it will print the actual version of the softaware`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Version v1.3.4-beta")
+		fmt.Println("Version v1.5.7-beta")
 	},
 }
 

@@ -225,7 +225,7 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 	result := fmt.Sprintf("Ok. campi ricevuti: Hostname: %s, Service: %s, Piattaforma: %s, Reperibile: %s, Cellulare: %s, Messaggio: %s", hostname, service, piattaforma, reperibile, cellulare, messaggio)
 
 	respondWithJSON(w, http.StatusCreated, result)
-	log.Println("ok")
+	//log.Println("ok")
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), result)
 
