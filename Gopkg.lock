@@ -196,6 +196,12 @@
   version = "v0.3.0"
 
 [[projects]]
+  branch = "v2"
+  name = "gopkg.in/tucnak/telebot.v2"
+  packages = ["."]
+  revision = "743778f69e925ca80651235174e188793e7ed653"
+
+[[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
@@ -204,6 +210,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "54d045744e3e11f9a7370ebd06e79d05ddad23af8946f343d70a3b2bfa0b121c"
+  inputs-digest = "e774ec578044d2d42b00d535ef03e98fb7851a7a93ee461328414d0841c7c903"
   solver-name = "gps-cdcl"
   solver-version = 1
