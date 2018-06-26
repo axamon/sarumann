@@ -89,7 +89,7 @@ func main() {
 		b.Send(m.Sender, "ciao a te straniero")
 	})
 
-	b.Handle("alberto", func(m *tb.Message) {
+	b.Handle("/alberto", func(m *tb.Message) {
 		b.Send(m.Chat, "Il mio padrone è geniale")
 	})
 
