@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	raven "github.com/getsentry/raven-go"
@@ -14,11 +15,14 @@ import (
 
 func emme3(cache string) (image string, err error) {
 
-	ora := string(time.Now().Unix())
-	ore4 := string(time.Now().Add(-4 * time.Hour).Unix())
-	fmt.Println(ora, ore4)
+	ora := time.Now().Unix()
+	ore4 := time.Now().Add(-4 * time.Hour).Unix()
 
-	URL := "http://localhost/cdn/pnp4nagios/index.php/image?host=" + cache + "&srv=Check_MK&theme=multisite&baseurl=..%2Fcheck_mk%2F&view=2&source=1&start=" + ore4 + "&end=" + ora
+	orat := strconv.FormatInt(ora, 10)
+	ore4t := strconv.FormatInt(ore4, 10)
+	fmt.Println(orat, ore4)
+
+	URL := "http://localhost/cdn/pnp4nagios/index.php/image?host=" + cache + "&srv=Check_MK&theme=multisite&baseurl=..%2Fcheck_mk%2F&view=2&source=1&start=" + ore4t + "&end=" + orat
 
 	fmt.Println(URL)
 	//Prepara il client http
