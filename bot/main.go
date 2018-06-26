@@ -2,13 +2,54 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
 	raven "github.com/getsentry/raven-go"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
+
+func emme3(cache string) (image string, err error) {
+
+	ora := string(time.Now().Unix())
+	ore4 := string(time.Now().Add(-4 * time.Hour).Unix())
+
+	URL := "http://localhost/cdn/pnp4nagios/index.php/image?host=" + cache + "&srv=Check_MK&theme=multisite&baseurl=..%2Fcheck_mk%2F&view=2&source=1&start=" + ore4 + "&end=" + ora
+
+	//Prepara il client http
+	client := &http.Client{}
+
+	//Imposta la request
+	req, err := http.NewRequest("GET", URL, nil)
+
+	//Aggiunge username e password impostate sul server web di arrivo
+	req.SetBasicAuth("omdadmin", "omd")
+
+	//Avvia il client e riceve la response
+	res, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+
+	//open a file for writing
+	image = "/tmp/" + cache + ".jpg"
+	file, err := os.Create(image)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Use io.Copy to just dump the response body to the file. This supports huge files
+	_, err = io.Copy(file, res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	file.Close()
+	fmt.Println("Success!")
+	return
+}
 
 func recuperavariabile(variabile string) (result string, err error) {
 	if result, ok := os.LookupEnv(variabile); ok && len(result) != 0 {
@@ -24,16 +65,15 @@ func main() {
 
 	//Recupera la variabile d'ambiente
 	TELEGRAMTOKEN, err := recuperavariabile("TELEGRAMTOKEN")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 
 	b, err := tb.NewBot(tb.Settings{
 		Token:  TELEGRAMTOKEN,
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
-
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
 
 	b.Handle("/pd", func(m *tb.Message) {
 		b.Send(m.Sender, "mannaggia al pd in eterno")
@@ -50,6 +90,17 @@ func main() {
 	b.Handle("/sarumann", func(m *tb.Message) {
 		// photos only
 		p := &tb.Photo{File: tb.FromDisk("./sarumann.jpg")}
+		b.Send(m.Sender, p)
+	})
+
+	b.Handle("/serm314", func(m *tb.Message) {
+		// photos only
+		image, err := emme3("serm314")
+		if err != nil {
+			log.Println(err.Error())
+		}
+
+		p := &tb.Photo{File: tb.FromDisk(image)}
 		b.Send(m.Sender, p)
 	})
 
