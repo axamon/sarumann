@@ -82,7 +82,7 @@ func main() {
 	})
 
 	b.Handle("/pd", func(m *tb.Message) {
-		b.Send(m.Sender, "mannaggia al pd in eterno")
+		b.Send(m.Chat, "mannaggia al pd in eterno")
 	})
 
 	b.Handle("/saluto", func(m *tb.Message) {
@@ -96,7 +96,7 @@ func main() {
 	b.Handle("/sarumann", func(m *tb.Message) {
 		// photos only
 		p := &tb.Photo{File: tb.FromDisk("./sarumann.jpg")}
-		b.Send(m.Sender, p)
+		b.Send(m.Chat, p)
 	})
 
 	b.Handle("fd", func(m *tb.Message) {
