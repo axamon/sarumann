@@ -90,7 +90,7 @@ func main() {
 	})
 
 	b.Handle("alberto", func(m *tb.Message) {
-		b.Send(m.Sender, "è un genio")
+		b.Send(m.Chat, "Il mio padrone è geniale")
 	})
 
 	b.Handle("/sarumann", func(m *tb.Message) {
@@ -99,7 +99,7 @@ func main() {
 		b.Send(m.Chat, p)
 	})
 
-	b.Handle("fd", func(m *tb.Message) {
+	b.Handle("/fd", func(m *tb.Message) {
 		// photos only
 		image, err := emme3("se-rm3-14")
 		if err != nil {
@@ -107,7 +107,7 @@ func main() {
 		}
 
 		p := &tb.Photo{File: tb.FromDisk(image)}
-		b.Send(m.Sender, p)
+		b.Send(m.Chat, p)
 	})
 
 	b.Start()
