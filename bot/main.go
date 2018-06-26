@@ -16,9 +16,11 @@ func emme3(cache string) (image string, err error) {
 
 	ora := string(time.Now().Unix())
 	ore4 := string(time.Now().Add(-4 * time.Hour).Unix())
+	fmt.Println(ora, ore4)
 
 	URL := "http://localhost/cdn/pnp4nagios/index.php/image?host=" + cache + "&srv=Check_MK&theme=multisite&baseurl=..%2Fcheck_mk%2F&view=2&source=1&start=" + ore4 + "&end=" + ora
 
+	fmt.Println(URL)
 	//Prepara il client http
 	client := &http.Client{}
 
@@ -95,7 +97,7 @@ func main() {
 
 	b.Handle("/serm314", func(m *tb.Message) {
 		// photos only
-		image, err := emme3("serm314")
+		image, err := emme3("se-rm3-14")
 		if err != nil {
 			log.Println(err.Error())
 		}
