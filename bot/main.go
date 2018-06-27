@@ -68,6 +68,8 @@ func recuperavariabile(variabile string) (result string, err error) {
 }
 
 func main() {
+	/* 	o := tb.InlineButton{Text: "se-rm3-14", URL: "http://www.google.it", Data: "se-rm3-14", InlineQuery: "ooo",
+	Action: func(emme3(string))} */
 
 	//Recupera la variabile d'ambiente
 	TELEGRAMTOKEN, err := recuperavariabile("TELEGRAMTOKEN")
@@ -82,6 +84,7 @@ func main() {
 	})
 
 	b.Handle("/pd", func(m *tb.Message) {
+
 		b.Send(m.Chat, "mannaggia al pd in eterno")
 	})
 
@@ -90,7 +93,7 @@ func main() {
 	})
 
 	b.Handle("/alberto", func(m *tb.Message) {
-		b.Send(m.Chat, "Il mio padrone è geniale")
+		b.Send(m.Chat, "Alberto è geniale")
 	})
 
 	b.Handle("/sarumann", func(m *tb.Message) {
