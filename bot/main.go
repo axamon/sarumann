@@ -78,7 +78,7 @@ func main() {
 		return
 	}
 
-	TELEGRAMTOKEN = "608145657:AAEUUw27zd41mOiPBQJzgr1QKzYwataFQrM"
+	//TELEGRAMTOKEN = "608145657:AAEUUw27zd41mOiPBQJzgr1QKzYwataFQrM"
 
 	b, err := tb.NewBot(tb.Settings{
 		Token:  TELEGRAMTOKEN,
