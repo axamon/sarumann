@@ -183,7 +183,14 @@ func main() {
 			cache := strings.Split(m.Text, " ")[1]
 			msg := fmt.Sprintf("Ecco i file descriptors delle ultime 24 ore per: %s", cache)
 			b.Reply(m, msg)
-			emme3(cache)
+
+			image, err := emme3(cache)
+			if err != nil {
+				log.Println(err.Error())
+			}
+
+			p := &tb.Photo{File: tb.FromDisk(image)}
+			b.Send(m.Chat, p)
 		}
 	})
 
