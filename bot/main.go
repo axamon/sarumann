@@ -15,7 +15,7 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
-func emme3(cache string) (image string, err error) {
+func emme3(cache, command string) (image string, err error) {
 
 	ora := time.Now().Unix()
 	ore24 := time.Now().Add(-24 * time.Hour).Unix()
@@ -23,9 +23,16 @@ func emme3(cache string) (image string, err error) {
 	orat := strconv.FormatInt(ora, 10)
 	ore24t := strconv.FormatInt(ore24, 10)
 	fmt.Println(orat, ore24)
+	var URL string
+	switch {
+	case command == "fd":
 
-	URL := "http://localhost/cdn/pnp4nagios/index.php/image?host=" + cache + "&srv=FILE_DESCRIPTORS&theme=multisite&baseurl=..%2Fcheck_mk%2F&view=2&source=0&start=" + ore24t + "&end=" + orat
+		URL = "http://localhost/cdn/pnp4nagios/index.php/image?host=" + cache + "&srv=FILE_DESCRIPTORS&theme=multisite&baseurl=..%2Fcheck_mk%2F&view=2&source=0&start=" + ore24t + "&end=" + orat
 
+	case command == "we":
+		URL = "http://localhost/cdn/pnp4nagios/index.php/image?host=" + cache + "&srv=WebEngine&theme=multisite&baseurl=..%2Fcheck_mk%2F&view=1&source=0&start=" + ore24t + "&end=" + orat
+
+	}
 	fmt.Println(URL)
 	//Prepara il client http
 	client := &http.Client{}
@@ -101,7 +108,7 @@ func main() {
 	})
 
 	b.Handle("/version", func(m *tb.Message) {
-		b.Send(m.Chat, "bot di test")
+		b.Send(m.Chat, "Sarumann_bot v2.4.1 beta")
 	})
 
 	b.Handle("/sarumann", func(m *tb.Message) {
@@ -110,7 +117,7 @@ func main() {
 		b.Send(m.Chat, p)
 	})
 
-	b.Handle("/fd", func(m *tb.Message) {
+	/* b.Handle("/fd", func(m *tb.Message) {
 		// photos only
 		image, err := emme3("se-rm3-14")
 		if err != nil {
@@ -119,7 +126,7 @@ func main() {
 
 		p := &tb.Photo{File: tb.FromDisk(image)}
 		b.Send(m.Chat, p)
-	})
+	}) */
 
 	// This button will be displayed in user's
 	// reply keyboard.
@@ -135,7 +142,7 @@ func main() {
 
 	b.Handle(&si, func(m *tb.Message) {
 		// on reply button pressed
-		emme3(m.Text)
+		emme3(m.Text, "fd")
 	})
 
 	// And this one — just under the message itself.
@@ -177,21 +184,38 @@ func main() {
 	b.Handle(tb.OnText, func(m *tb.Message) {
 		//b.Send(m.Sender, m.Text)
 		//cerca se nella stringa di testo è presente fd + cache
-		r, _ := regexp.Compile(`^[fF]d\sse-[a-z]+[0-9]-[0-9]?`)
-
-		if r.MatchString(m.Text) == true {
+		fd, _ := regexp.Compile(`^[fF]d\sse-[a-z]+[0-9]-[0-9]?`)
+		if fd.MatchString(m.Text) == true {
 			cache := strings.Split(m.Text, " ")[1]
-			msg := fmt.Sprintf("Ecco i file descriptors delle ultime 24 ore per: %s", cache)
-			b.Reply(m, msg)
 
-			image, err := emme3(cache)
+			image, err := emme3(cache, "fd")
 			if err != nil {
 				log.Println(err.Error())
 			}
 
 			p := &tb.Photo{File: tb.FromDisk(image)}
+
+			msg := fmt.Sprintf("Ecco i file descriptors delle ultime 24 ore per: %s", cache)
+			b.Reply(m, msg)
 			b.Send(m.Chat, p)
 		}
+
+		we, _ := regexp.Compile(`^[wW]e\sse-[a-z]+[0-9]-[0-9]?`)
+		if we.MatchString(m.Text) == true {
+			cache := strings.Split(m.Text, " ")[1]
+
+			image, err := emme3(cache, "we")
+			if err != nil {
+				log.Println(err.Error())
+			}
+
+			p := &tb.Photo{File: tb.FromDisk(image)}
+
+			msg := fmt.Sprintf("Ecco i file descriptors delle ultime 24 ore per: %s", cache)
+			b.Reply(m, msg)
+			b.Send(m.Chat, p)
+		}
+
 	})
 
 	b.Handle(tb.OnQuery, func(q *tb.Query) {
