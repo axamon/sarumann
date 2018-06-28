@@ -211,7 +211,7 @@ func main() {
 
 			p := &tb.Photo{File: tb.FromDisk(image)}
 
-			msg := fmt.Sprintf("Ecco i file descriptors delle ultime 24 ore per: %s", cache)
+			msg := fmt.Sprintf("Ecco l'andamento webengine delle ultime 24 ore per: %s", cache)
 			b.Reply(m, msg)
 			b.Send(m.Chat, p)
 		}
