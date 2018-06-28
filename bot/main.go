@@ -37,7 +37,7 @@ func emme3(cache string) (image string, err error) {
 	//Avvia il client e riceve la response
 	res, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer res.Body.Close()
 
@@ -78,6 +78,8 @@ func main() {
 		return
 	}
 
+	TELEGRAMTOKEN = "608145657:AAEUUw27zd41mOiPBQJzgr1QKzYwataFQrM"
+
 	b, err := tb.NewBot(tb.Settings{
 		Token:  TELEGRAMTOKEN,
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
@@ -111,6 +113,91 @@ func main() {
 
 		p := &tb.Photo{File: tb.FromDisk(image)}
 		b.Send(m.Chat, p)
+	})
+
+	// This button will be displayed in user's
+	// reply keyboard.
+	serm314 := tb.ReplyButton{Text: "se-rm3-14"}
+
+	replyBtn2 := tb.ReplyButton{Text: "🌕 Button #2"}
+
+	replyKeys := [][]tb.ReplyButton{
+		[]tb.ReplyButton{serm314},
+		[]tb.ReplyButton{replyBtn2},
+		// ...
+	}
+
+	b.Handle(&serm314, func(m *tb.Message) {
+		// on reply button pressed
+		emme3(serm314.Text)
+	})
+
+	// And this one — just under the message itself.
+	// Pressing it will cause the client to send
+	// the bot a callback.
+	//
+	// Make sure Unique stays unique as it has to be
+	// for callback routing to work.
+	inlineBtn := tb.InlineButton{
+		Unique: "sad_moon",
+		Text:   "🌚 Button #2",
+	}
+	inlineKeys := [][]tb.InlineButton{
+		[]tb.InlineButton{inlineBtn},
+		// ...
+	}
+
+	b.Handle(&inlineBtn, func(c *tb.Callback) {
+		// on inline button pressed (callback!)
+
+		// always respond!
+		//b.Respond(c, &tb.CallbackResponse{...})
+	})
+
+	// Command: /start <PAYLOAD>
+	b.Handle("/start", func(m *tb.Message) {
+		if !m.Private() {
+			return
+		}
+
+		b.Send(m.Sender, "Ciao!", &tb.ReplyMarkup{
+			InlineKeyboard:      inlineKeys,
+			ReplyKeyboard:       replyKeys,
+			OneTimeKeyboard:     true,
+			ResizeReplyKeyboard: true,
+		})
+	})
+
+	b.Handle(tb.OnQuery, func(q *tb.Query) {
+		urls := []string{
+			"http://factpile.wikia.com/wiki/File:3-hobbit_saruman.jpg",
+		}
+
+		results := make(tb.Results, len(urls)) // []tb.Result
+		for i, url := range urls {
+			result := &tb.PhotoResult{
+				URL:     url,
+				Title:   "Test",
+				Caption: "Prova",
+
+				// required for photos
+				ThumbURL: url,
+			}
+
+			results[i] = result
+			results[i].SetResultID(strconv.Itoa(i)) // It's needed to set a unique string ID for each result
+		}
+
+		err := b.Answer(q, &tb.QueryResponse{
+			Results:    results,
+			IsPersonal: false,
+			NextOffset: "bla",
+			CacheTime:  60, // a minute
+		})
+
+		if err != nil {
+			fmt.Println(err)
+		}
 	})
 
 	b.Start()
