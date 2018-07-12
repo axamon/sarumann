@@ -87,7 +87,7 @@ func main() {
 		return
 	}
 
-	//TELEGRAMTOKEN = "608145657:AAEUUw27zd41mOiPBQJzgr1QKzYwataFQrM"
+	TELEGRAMTOKEN = "608145657:AAEUUw27zd41mOiPBQJzgr1QKzYwataFQrM"
 
 	b, err := tb.NewBot(tb.Settings{
 		Token:  TELEGRAMTOKEN,
@@ -117,6 +117,16 @@ func main() {
 		b.Send(m.Chat, p)
 	})
 
+	b.Handle("Aggiornamenti", func(m *tb.Message) {
+		ticker := time.NewTicker(5 * time.Second)
+		go func() {
+			for range ticker.C {
+				b.Send(m.Sender, "ciao")
+			}
+		}()
+		time.Sleep(20 * time.Second)
+		ticker.Stop()
+	})
 	/* b.Handle("/fd", func(m *tb.Message) {
 		// photos only
 		image, err := emme3("se-rm3-14")

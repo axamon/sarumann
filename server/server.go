@@ -171,21 +171,19 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 	result := fmt.Sprintf("Ok. campi ricevuti: Hostname: %s, Service: %s, Piattaforma: %s, Reperibile: %s, Cellulare: %s, Messaggio: %s", hostname, service, piattaforma, reperibile, cellulare, messaggio)
 
 	respondWithJSON(w, http.StatusCreated, result)
-	log.Println("ok")
+	//log.Println("ok")
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), result)
 
-	//Non deve inviare la VoiceCall
-	//CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
-
-	//Ma un controllo se il cellulare è corretto si può fare
-
-	//Trasforma il campo passato in una stringa di 10 numeri
-	_, err = verificaCell(reperibile)
-	if err != nil {
-		log.Printf("Cellulare non gestibile: %s\n", err.Error())
-		return
+	//Invia cmq la chiamata se è per la piattaforma CDN
+	if piattaforma == "CDN" {
+		Cellpertest := viper.GetString("Cellpertest")
+		if len(Cellpertest) != 0 {
+			reperibile = Cellpertest
+		}
+		CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
 	}
+
 	return
 }
 
