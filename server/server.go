@@ -136,8 +136,10 @@ func SetReper(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+//Callfile sends the file gerated for asterisk
 func Callfile(w http.ResponseWriter, r *http.Request) {
-	http.FileServer(http.Dir("/tmp"))
+	http.ServeFile(w, r, "/tmp/exampleTest.call")
+	return
 }
 
 //CreateNotificaNoVoiceCall riceve gli alerts dei nagios
