@@ -19,6 +19,7 @@ import (
 	"log"
 	"net/http"
 
+	auth "github.com/abbot/go-http-auth"
 	"github.com/axamon/sarumann/server"
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
@@ -39,6 +40,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		authenticator := auth.NewBasicAuthenticator("azure.com", Secret)
 		//port := flag.String("port", "8080", "porta TCP da usare.")
 		router := mux.NewRouter()
 		switch {
@@ -49,7 +51,7 @@ to quickly create a Cobra application.`,
 			fmt.Println("Notifiche vocali disattivate.")
 			router.HandleFunc("/create", server.CreateNotificaNoVoiceCall).Methods("POST")
 		}
-
+		router.Handle("/handle", authenticator.Wrap(handle))
 		router.HandleFunc("/callfile", server.Callfile)
 		router.HandleFunc("/reper", server.SetReper).Methods("POST")
 		router.HandleFunc("/getreper/{piatta}", server.GetReper)
@@ -57,6 +59,19 @@ to quickly create a Cobra application.`,
 		log.Fatal(http.ListenAndServe(":"+port, router))
 		fmt.Println("start called")
 	},
+}
+
+func handle(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
+	fmt.Fprintf(w, "<html><body><h1>Hello, %s!</h1></body></html>", r.Username)
+}
+
+//Secret gestisce le password
+func Secret(user, realm string) string {
+	if user == "sarumann" {
+		// password is "hello"
+		return "$1$dlPL2MqE$oQmn16q49SqdmhenQuNgs1"
+	}
+	return ""
 }
 
 func init() {
