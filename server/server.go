@@ -180,8 +180,13 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 		Cellpertest := viper.GetString("Cellpertest")
 		if len(Cellpertest) != 0 {
 			reperibile = Cellpertest
+			log.Println("Impostato reperibile di test", reperibile)
 		}
-		CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
+		if fob := isfob(time.Now(), 18); fob == true {
+			fmt.Println("Siamo in FOB. Notifiche vocali attive!")
+			CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
+		}
+
 	}
 
 	return
@@ -230,6 +235,40 @@ func CreateNotifica(w http.ResponseWriter, r *http.Request) {
 	CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
 
 	return
+}
+
+func isfob(ora time.Time, foborainizio int) (ok bool) {
+	//ora := time.Now()
+	giorno := ora.Weekday()
+	//Partiamo che non siamo in FOB
+	ok = false
+
+	switch giorno {
+	//Se è sabato siamo in fob
+	case time.Saturday:
+		//fmt.Println("E' sabato")
+		ok = true
+	//Se è domenica siamo in fob
+	case time.Sunday:
+		//fmt.Println("E' Domenica")
+		ok = true
+	//Se invece è un giorno feriale dobbiamo vedere l'orario
+	default:
+		//se è dopo le 18 siamo in fob
+		//Si avviso il reperibile mezz'ora prima se è un problema si può cambiare
+		//Recupero l'ora del FOB dal file di configurazione
+		if ora.Hour() >= foborainizio {
+			//fmt.Println("Giorno feriale", viper.GetInt("foborainizio"))
+			ok = true
+			return ok
+		}
+		//se è prima delle 7 allora siamo in fob
+		if ora.Hour() < 7 {
+			ok = true
+		}
+	}
+	//Ritorna ok che sarà true o false a seconda se siamo in FOB o no
+	return ok
 }
 
 //CreateCall crea il file .call che serve ad Asterisk per contattare il reperibile
