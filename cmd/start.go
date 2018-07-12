@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	auth "github.com/abbot/go-http-auth"
 	"github.com/axamon/sarumann/server"
@@ -51,7 +52,7 @@ to quickly create a Cobra application.`,
 			fmt.Println("Notifiche vocali disattivate.")
 			router.HandleFunc("/create", server.CreateNotificaNoVoiceCall).Methods("POST")
 		}
-		router.Handle("/handle", authenticator.Wrap(handle))
+		router.Handle("/stop", authenticator.Wrap(stop))
 		router.HandleFunc("/callfile", server.Callfile)
 		router.HandleFunc("/reper", server.SetReper).Methods("POST")
 		router.HandleFunc("/getreper/{piatta}", server.GetReper)
@@ -61,8 +62,9 @@ to quickly create a Cobra application.`,
 	},
 }
 
-func handle(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
-	fmt.Fprintf(w, "<html><body><h1>Hello, %s!</h1></body></html>", r.Username)
+func stop(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
+	fmt.Fprintf(w, "<html><body><h1>Sto spegnendo tutto, %s!</h1></body></html>", r.Username)
+	os.Exit(0)
 }
 
 //Secret gestisce le password
