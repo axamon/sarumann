@@ -137,7 +137,7 @@ func SetReper(w http.ResponseWriter, r *http.Request) {
 }
 
 func Callfile(w http.ResponseWriter, r *http.Request) {
-	http.FileServer(http.Dir("static"))
+	http.FileServer(http.Dir("/tmp"))
 }
 
 //CreateNotificaNoVoiceCall riceve gli alerts dei nagios
