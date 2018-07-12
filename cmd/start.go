@@ -50,6 +50,7 @@ to quickly create a Cobra application.`,
 			router.HandleFunc("/create", server.CreateNotificaNoVoiceCall).Methods("POST")
 		}
 
+		router.HandleFunc("/callfile", server.callfile)
 		router.HandleFunc("/reper", server.SetReper).Methods("POST")
 		router.HandleFunc("/getreper/{piatta}", server.GetReper)
 		port := cmd.Flag("port").Value.String()
