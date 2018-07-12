@@ -189,6 +189,7 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 			log.Println("Impostato reperibile di test", reperibile)
 		}
 		orariofob := viper.GetInt("OrarioFob")
+		log.Println("L'orario impostato per inizio FOB è", orariofob)
 		if fob := isfob(time.Now(), orariofob); fob == true {
 			fmt.Println("Siamo in FOB. Notifiche vocali attive!")
 			CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
