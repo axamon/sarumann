@@ -31,6 +31,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/spf13/viper"
@@ -188,7 +189,11 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 			reperibile = Cellpertest
 			log.Println("Impostato reperibile di test", reperibile)
 		}
-		orariofob := viper.GetInt("OrarioFob")
+		orariofobstr := viper.GetString("OrarioFob")
+		orariofob, err := strconv.Atoi(orariofobstr)
+		if err != nil {
+			log.Println(err.Error())
+		}
 		log.Println("L'orario impostato per inizio FOB è", orariofob)
 		if fob := isfob(time.Now(), orariofob); fob == true {
 			fmt.Println("Siamo in FOB. Notifiche vocali attive!")
