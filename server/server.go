@@ -315,8 +315,9 @@ Set: SRV_MSG="sul server ` + hostname + ` il servizio ` + service + ` è in crit
 	//nel nostro caso equivale a dove nginx tiene i contenuti statici del webserver
 	//le informazioni sono nel file nascosto .sarumann.yaml che l'utente deve avere
 	//nella propria $HOME
-	path := viper.GetString("CallPath")
-	file, err := os.Create(path + "exampleTest.call") // Truncates if file already exists, be careful!
+	//path := viper.GetString("CallPath")
+	//file, err := os.Create(path + "exampleTest.call") // Truncates if file already exists, be careful!
+	file, err := os.Create("/tmp/exampleTest.call")
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
 	}
