@@ -136,7 +136,7 @@ func SetReper(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func callfile(w http.ResponseWriter, r *http.Request) {
+func Callfile(w http.ResponseWriter, r *http.Request) {
 	http.FileServer(http.Dir("static"))
 }
 
