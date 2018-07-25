@@ -189,8 +189,9 @@ func AntiStorm(piattaforma string) (err error) {
 	}
 
 	oraepoch := time.Now().Unix()
+	fmt.Println(oraepoch) //debug
 	//Se non sono passati tot secondi dall'ultima notifica allora esce
-	tot := 10 ///1800 secondi uguale mezz'ora
+	tot := 1800 ///1800 secondi uguale mezz'ora
 	if lastint+(tot) > int(oraepoch) {
 		err = fmt.Errorf("Troppe chiamate al reperibile per %s, è permessa una sola chiamata ogni %d secondi", piattaforma, tot)
 		return err
