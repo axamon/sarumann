@@ -254,10 +254,13 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 		if fob := isfob(time.Now(), orariofob); fob == true {
 			fmt.Println("Siamo in FOB. Notifiche vocali attive!")
 			//Logga sul db la notifica in entrata
-			LogNotifica(p)
+			err := LogNotifica(p)
+			if err != nil {
+				log.Println(err.Error())
+			}
 			//Verifica che sia passato abbastanza tempo dall'ultima chiamata prima di chiamare nuovamente
-			err := AntiStorm(p.Piattaforma)
-			if err == nil {
+			errstorm := AntiStorm(p.Piattaforma)
+			if errstorm == nil {
 				CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
 			}
 		}
