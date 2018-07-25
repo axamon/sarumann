@@ -254,18 +254,19 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 		//Se siamo in fuori orario base
 		if fob := isfob(time.Now(), orariofob); fob == true {
 			fmt.Println("Siamo in FOB. Notifiche vocali attive!")
+			//Verifica che sia passato abbastanza tempo dall'ultima chiamata prima di chiamare nuovamente
+			errstorm := AntiStorm(p.Piattaforma)
+			if errstorm != nil {
+				log.Println(errstorm)
+				return
+			}
 			//Logga sul db la notifica in entrata
 			err := LogNotifica(p)
 			if err != nil {
 				log.Println(err.Error())
 			}
-			//Verifica che sia passato abbastanza tempo dall'ultima chiamata prima di chiamare nuovamente
-			errstorm := AntiStorm(p.Piattaforma)
-			if errstorm == nil {
-				CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
-				return
-			}
-			log.Println(errstorm)
+			CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
+
 		}
 
 	}
