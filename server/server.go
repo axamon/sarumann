@@ -262,7 +262,9 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 			errstorm := AntiStorm(p.Piattaforma)
 			if errstorm == nil {
 				CreateCall(hostname, service, piattaforma, reperibile, cellulare, messaggio)
+				return
 			}
+			log.Println(errstorm)
 		}
 
 	}
