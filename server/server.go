@@ -239,11 +239,11 @@ func CreateNotificaNoVoiceCall(w http.ResponseWriter, r *http.Request) {
 
 	//Invia cmq la chiamata se è per la piattaforma CDN
 	if piattaforma == "CDN" {
-		/* Cellpertest := viper.GetString("Cellpertest")
+		Cellpertest := viper.GetString("Cellpertest")
 		if len(Cellpertest) != 0 {
 			reperibile = Cellpertest
 			log.Println("Impostato reperibile di test", reperibile)
-		} */
+		}
 		orariofobstr := viper.GetString("OrarioFob")
 		orariofob, err := strconv.Atoi(orariofobstr)
 		if err != nil {
